@@ -1,15 +1,94 @@
-import { memo } from 'react';
+import { memo, useState} from 'react';
 import type { FC } from 'react';
 
 import resets from '../_resets.module.css';
 import classes from './Home.module.css';
 import { Polygon1Icon } from './Polygon1Icon.js';
+import LoginModal from '../LoginModal/LoginModal';
+import RegModal from '../RegisterModal/RegisterModal'
+import { getAuth,signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase'
+
 
 interface Props {
   className?: string;
 }
 /* @figmaId 1:2 */
 export const Home: FC<Props> = memo(function Home(props = {}) {
+
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLoginModalClose = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleLogin = (email: string, password: string) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in successfully
+        const user = userCredential.user;
+        console.log('Signed in user:', user);
+        alert(`The user ${email} is successfully signed in.`);
+        setIsLoggedIn(true);
+        // You can add your navigation logic or state updates here
+
+      })
+      .catch((error) => {
+        // Handle sign-in errors
+        console.error('Sign-in error:', error);
+        // You can display an error message to the user
+      });
+  };
+
+  const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+
+ 
+
+  const handleRegModalClose = () => {
+    setIsRegModalOpen(false);
+  };
+
+  const handleReg = (email: string, password: string) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // User registered successfully
+        const user = userCredential.user;
+        console.log('Registered user:', user);
+        alert(`The user ${email} is registered successfully.`);
+        // You can add your navigation logic or state updates here
+      })
+      .catch((error) => {
+        // Handle registration errors
+        console.error('Registration error:', error);
+        // You can display an error message to the user
+      });
+  };
+
+  const handleRegClick = () => {
+    setIsRegModalOpen(true);
+  };
+
+  const handleLogoutClick = () => {
+    signOut(auth)
+      .then(() => {
+        // Successfully signed out
+        setIsLoggedIn(false); // Update the isLoggedIn state
+        // You can add any additional logic after logout here
+        alert('You have succesfully logged out.'); 
+      })
+      .catch((error) => {
+        // Handle logout errors
+        console.error('Logout error:', error);
+        // You can display an error message to the user if needed
+      });
+  };
+  
+
   return (
     <div className={`${resets.clapyResets} ${classes.root}`}>
       <div className={classes.frame14}></div>
@@ -249,7 +328,7 @@ export const Home: FC<Props> = memo(function Home(props = {}) {
       <div className={classes.ourCoreValues}>Our Core Values</div>
       <div className={classes.frame51}>
         <div className={classes.frame52}>
-          <div className={classes.copyright2022AllRightReserved}>Copyright © 2022. All right reserved</div>
+          <div className={classes.copyright2022AllRightReserved}>Copyright © 2022. All right reserved. Designed by Okoro Jeremiah, ICTG_Test </div>
         </div>
         <div className={classes.winnersChapelLogoPng21}></div>
         <div className={classes.frame53}>
@@ -283,13 +362,25 @@ export const Home: FC<Props> = memo(function Home(props = {}) {
           <div className={classes.bFC}>BFC</div>
           <div className={classes.wOFBI}>WOFBI</div>
           <div className={classes.contactUs2}>Contact us</div>
+          {/* Conditionally render login/logout button based on isLoggedIn */}
+        {isLoggedIn ? (
+          <div className={classes.contactUs2} onClick={handleLogoutClick}>Logout </div>
+        ) : (
+          <div className={classes.contactUs2} onClick={handleLoginClick}>Login </div>
+        )}
+          <LoginModal isOpen={isLoginModalOpen} onClose={handleLoginModalClose} onLogin={handleLogin} />
+          <div className={classes.register} onClick={handleRegClick}>Register</div>
+          <RegModal isOpen={isRegModalOpen} onClose={handleRegModalClose} onReg={handleReg} />
         </div>
+        
         <div className={classes.frame5}>
           <div className={classes.polygon1}>
             <Polygon1Icon className={classes.icon} />
           </div>
           <div className={classes.lIVESERVICE}>LIVE SERVICE</div>
         </div>
+
+        
       </div>
     </div>
   );

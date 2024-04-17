@@ -1,0 +1,49 @@
+/* LoginModal.css */
+.modalContainer {
+    background-color: black;
+    border-radius: 8px;
+    padding: 20px;
+    padding-right: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+    color: white
+  }
+
+  .closeButton {
+     position: absolute;
+     right: 5%;
+    
+  }
+  
+  .modalTitle {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .modalInput {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .modalButton {
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modalButton:hover {
+    background-color: #0056b3;
+  }
+  .error{
+    font-size: 14px;
+    
+  }
+  
